@@ -1,13 +1,14 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socialmediaapp/models/post_model/post_model.dart';
 import 'package:socialmediaapp/modules/home_screen/home_layout_cubit/home_layout_cubit.dart';
 import 'package:socialmediaapp/shared/constants/constants.dart';
 
 import '../home_screen/home_layout_cubit/home_layout_states.dart';
 
 class FeedScreen extends StatelessWidget {
-  const FeedScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,44 +16,48 @@ class FeedScreen extends StatelessWidget {
       (
       listener: (context , state){},
       builder: (context,state){
-        return SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-           children: [
-             Card(
-               child: Stack(
-                 alignment: AlignmentDirectional.topEnd,
-                 children: [
-                   Image(
-                     image: NetworkImage('https://www.incimages.com/uploaded_files/image/1920x1080/getty_624206636_200013332000928034_376810.jpg'),
-                     width: double.infinity,
-                     height: 200,
-                     fit: BoxFit.cover,
-                   ),
-                   Padding(
-                     padding: const EdgeInsets.all(5.0),
-                     child: Text('add FUN to your life' , style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.black), ),
-                   ),
-                 ],
-               ),
-               clipBehavior: Clip.antiAliasWithSaveLayer,
-               elevation: 10.0,
-               margin: EdgeInsets.all(8),
-             ),
-             ListView.separated(
-               shrinkWrap: true,
-                 physics: NeverScrollableScrollPhysics(),
-                 itemBuilder: (context,index)=>feedBackItemDesign(context),
-                 separatorBuilder: (context , index) => SizedBox(height: 1,),
-                 itemCount: 10),
-           ],
-          ),
+        return ConditionalBuilder(
+          condition: HomeLayoutCubit.get(context).posts.length > 0,
+          builder: (context) => SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Card(
+                  child: Stack(
+                    alignment: AlignmentDirectional.topEnd,
+                    children: [
+                      Image(
+                        image: NetworkImage('https://www.incimages.com/uploaded_files/image/1920x1080/getty_624206636_200013332000928034_376810.jpg'),
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text('add FUN to your life' , style: Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.black), ),
+                      ),
+                    ],
+                  ),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  elevation: 10.0,
+                  margin: EdgeInsets.all(8),
+                ),
+                ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context,index)=> postItemDesign(HomeLayoutCubit.get(context).posts[index],context , index),
+                    separatorBuilder: (context , index)=> SizedBox(height: 1,),
+                    itemCount: HomeLayoutCubit.get(context).posts.length),
+              ],
+            ),
+          ) ,
+          fallback: (context) => Center(child: CircularProgressIndicator())  ,
         );
       },
     );
   }
 
-  Widget feedBackItemDesign (context){
+  Widget postItemDesign (CreatePost model ,context , index){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -62,11 +67,13 @@ class FeedScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
+
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTm5GlFAeYd8jgwc8dA7Z_3wPu9u4IcE1dCOg&usqp=CAU'),
+                        backgroundImage: NetworkImage('${model.profileImage}'),
                       ),
 
 
@@ -76,13 +83,13 @@ class FeedScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text('Mina Milad' , style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),),
+                              Text('${model.name}' , style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),),
                               SizedBox(width: 5,),
                               Icon(Icons.check_circle_rounded , color: defaultColor,size: 15,),
                             ],
                           ),
                           SizedBox(height: 3,),
-                          Text('Febrauary 20,2022 at 07:40' , style: Theme.of(context).textTheme.caption,),
+                          Text('${model.dateTime}.' , style: Theme.of(context).textTheme.caption,),
                         ],
                       ),
                       Spacer(),
@@ -99,29 +106,28 @@ class FeedScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 5,),
-                  Text('Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
-                      ' Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s,'
-                      ' when an unknown printer took a galley of type and scrambled it to make a type specimen book.' ,
+                  Text('${model.text}' ,
                     maxLines: 5,
                     style: Theme.of(context).textTheme.subtitle1?.copyWith(overflow: TextOverflow.ellipsis,height: 1.2),
                   ),
-                  Container(
-                    width: double.infinity,
-                    child: Wrap(
-                      spacing: 0.0,
-                      children: [
-                        Container(
-                          height: 30,
-                          child: MaterialButton(
-                            onPressed: (){},
-                            padding: EdgeInsets.zero,
-                            minWidth: 0.1,
-                            child: Text('#gym',style: TextStyle(color: Colors.blueAccent),),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   child: Wrap(
+                  //     spacing: 0.0,
+                  //     children: [
+                  //       Container(
+                  //         height: 30,
+                  //         child: MaterialButton(
+                  //           onPressed: (){},
+                  //           padding: EdgeInsets.zero,
+                  //           minWidth: 0.1,
+                  //           child: Text('#gym',style: TextStyle(color: Colors.blueAccent),),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  if(model.postImage != '')
                   Container(
                     height: 150,
                     decoration: BoxDecoration(
@@ -129,7 +135,7 @@ class FeedScreen extends StatelessWidget {
                     ),
                     width: double.infinity,
                     child: Image(
-                      image: NetworkImage('https://i.pinimg.com/originals/59/6e/0f/596e0faa2c648762ceff576bc7a36270.jpg'),
+                      image: NetworkImage('${model.postImage}'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -137,12 +143,14 @@ class FeedScreen extends StatelessWidget {
                   Row(
                     children: [
                       InkWell(
-                        onTap: (){},
+                        onTap: (){
+                          HomeLayoutCubit.get(context).postsLike(HomeLayoutCubit.get(context).postId[index]);
+                        },
                         child: Row(
                           children: [
                             Icon(Icons.check , color: defaultColor,),
                             SizedBox(width: 5,),
-                            Text('120' , style: Theme.of(context).textTheme.caption,)
+                            Text('${HomeLayoutCubit.get(context).likesNum[index]}' , style: Theme.of(context).textTheme.caption,)
                           ],
                         ),
                       ),
@@ -172,7 +180,7 @@ class FeedScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 15,
-                        backgroundImage: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTm5GlFAeYd8jgwc8dA7Z_3wPu9u4IcE1dCOg&usqp=CAU'),
+                        backgroundImage: NetworkImage('${model.profileImage}'),
                       ),
                       SizedBox(width: 10,),
                       Container(

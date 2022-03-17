@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socialmediaapp/modules/home_screen/home_layout_cubit/home_layout_cubit.dart';
 import 'package:socialmediaapp/modules/home_screen/home_layout_cubit/home_layout_states.dart';
-import 'package:socialmediaapp/modules/login/login_screen.dart';
-import 'package:socialmediaapp/shared/cache_helper/cache_helper.dart';
 import 'package:socialmediaapp/shared/components/components.dart';
 import '../new_post_screen/new_post_screen.dart';
 
@@ -40,17 +38,17 @@ class HomeScreen extends StatelessWidget {
                   icon: Icon(Icons.notifications_active_outlined),
                 ),
               ),
-              MaterialButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {},
-                child:IconButton(
-                  onPressed: () {
-                    cacheHelper.remove('uIdkey');
-                    navigateTo(context, LoginScreen());
-                  },
-                  icon: Icon(Icons.logout),
-                ),
-              ),
+              // MaterialButton(
+              //   padding: EdgeInsets.zero,
+              //   onPressed: () {},
+              //   child:IconButton(
+              //     onPressed: () {
+              //       cacheHelper.remove('uIdkey');
+              //       navigateTo(context, LoginScreen());
+              //     },
+              //     icon: Icon(Icons.logout),
+              //   ),
+              // ),
             ],
             title: Text(
                 HomeLayoutCubit.get(context).titles[HomeLayoutCubit.get(context).currentIndex],

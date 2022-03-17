@@ -31,7 +31,7 @@ MyApp ({required this.startWidget});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => HomeLayoutCubit()..getUserData(),
+      create: (BuildContext context) => HomeLayoutCubit()..getUserData()..getPosts(),
       child: BlocConsumer<HomeLayoutCubit,HomeLayoutStates>(
         listener: (context,state){},
         builder: (context,State){

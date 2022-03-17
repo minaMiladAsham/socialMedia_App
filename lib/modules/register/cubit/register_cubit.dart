@@ -7,8 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socialmediaapp/models/save_data_in_firebase/save_data_in_firebase_model.dart';
 import 'package:socialmediaapp/modules/register/cubit/register_states.dart';
 
-
-
 class RegisterCubit extends Cubit<RegisterPageStates> {
   RegisterCubit() : super(RegisterPageInitialState());
 
@@ -34,7 +32,7 @@ class RegisterCubit extends Cubit<RegisterPageStates> {
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
       saveDataInFireBase(
-          email: email, phone: phone, name: name, uId: value.user!.uid);
+          email: email, phone: phone, name: name, uId: value.user!.uid,);
       emit(RegisterPagesuccessGetData());
     }).catchError((onError) {
       emit(RegisterPageErrorGetData(onError.toString()));
@@ -48,7 +46,14 @@ class RegisterCubit extends Cubit<RegisterPageStates> {
       required String uId}) {
     emit(RegisterPageLoadingSaveDataInFirebase());
     saveDataInFirebaseModel model = saveDataInFirebaseModel(
-        phone: phone, email: email, name: name, uId: uId,isVerified: false);
+        phone: phone,
+        email: email,
+        name: name,
+        uId: uId,
+        coverImage: 'https://img.freepik.com/free-photo/silhouette-person-city_23-2149211269.jpg?w=996',
+        profileImage: 'https://img.freepik.com/free-photo/two-people-fall-love-shadow_181624-43697.jpg?w=740',
+        bio: 'I am so Happy to Be Here Today'
+    );
     FirebaseFirestore.instance
         .collection('usersData')
         .doc(uId)

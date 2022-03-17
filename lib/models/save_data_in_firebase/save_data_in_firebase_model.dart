@@ -3,21 +3,29 @@ class saveDataInFirebaseModel {
   String? uId;
   String? phone;
   String? email;
-  late bool isVerified;
+  String? coverImage;
+  String? profileImage;
+  String? bio;
 
   saveDataInFirebaseModel(
-      {required this.phone,
+      {
+        required this.phone,
       required this.email,
       required this.name,
       required this.uId,
-      required this.isVerified});
+      required this.bio,
+        required this.coverImage,
+        required this.profileImage,
+      });
 
   saveDataInFirebaseModel.fromJson(Map<String , dynamic>? json){
     uId = json!['uId'];
     name = json['name'];
     phone = json['phone'];
     email = json['email'];
-    isVerified = json['isVerified'];
+    bio = json['bio'];
+    coverImage = json['coverImage'];
+    profileImage = json['profileImage'];
   }
 
   Map<String, dynamic> toMap(){
@@ -26,7 +34,9 @@ class saveDataInFirebaseModel {
       'phone' : phone,
       'email' : email,
       'uId' : uId,
-      'isVerified' : isVerified,
+      'bio' : bio,
+      'coverImage' : coverImage,
+      'profileImage' : profileImage,
     };
   }
 }

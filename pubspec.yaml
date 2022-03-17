@@ -39,6 +39,9 @@ dependencies:
   fluttertoast: ^8.0.8
   conditional_builder_null_safety: ^0.0.6
   shared_preferences: ^2.0.9
+  flutter_speed_dial: ^5.0.0+1
+  image_picker: ^0.8.4+11
+  firebase_storage: ^10.2.8
 
 
   #firebase
